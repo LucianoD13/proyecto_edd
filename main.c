@@ -68,6 +68,7 @@ typedef struct{
 
 } SistemaTorneos;
 
+//Comparador para no repetir ID
 int is_equal_int(void* key1, void* key2){
 
     int* id1 = (int*) key1;
@@ -76,6 +77,7 @@ int is_equal_int(void* key1, void* key2){
     return (*id1 == *id2);
 }
 
+//Comparador para organizar ranking  
 int higher_than_ranking(void* key1, void* key2){
 
     RankingKey* r1 = (RankingKey*) key1;
@@ -87,6 +89,7 @@ int higher_than_ranking(void* key1, void* key2){
     return r1->id < r2->id;
 }
 
+//Función para inicializar el sistema y tdas a utilizar
 SistemaTorneos* crearSistema()
 {
     SistemaTorneos* sistema = malloc(sizeof(SistemaTorneos));
@@ -115,6 +118,7 @@ SistemaTorneos* crearSistema()
     return sistema;
 }
 
+//Prototipos de las funciones
 int leerOpcion();
 void menuPrincipal(SistemaTorneos* sistema);
 void menuJugadores(SistemaTorneos* sistema);
@@ -140,6 +144,7 @@ void top3Jugadores(SistemaTorneos* sistema);
 void estadisticasJugador(SistemaTorneos* sistema);
 void deshacerUltimaAccion(SistemaTorneos* sistema);
 
+//Función para validar la lectura de las opciones en los menús
 int leerOpcion()
 {
     int opcion;
@@ -157,6 +162,7 @@ int leerOpcion()
     }
 }
 
+//Menú principal del sistema
 void menuPrincipal(SistemaTorneos* sistema)
 {
     int opcion;
@@ -199,8 +205,9 @@ void menuPrincipal(SistemaTorneos* sistema)
     }while(opcion != 0);
 }
 
-void menuJugadores(SistemaTorneos* sistema){
-
+//Menú para gestionar a los jugadores
+void menuJugadores(SistemaTorneos* sistema)
+{
     int opcion;
 
     do{
@@ -238,6 +245,7 @@ void menuJugadores(SistemaTorneos* sistema){
     }while(opcion != 0);
 }
 
+//Función para limpiar buffer en caso de leer un tipo de dato diferente al solicitado
 void limpiarBuffer()
 {
     int c;
@@ -245,6 +253,7 @@ void limpiarBuffer()
     while((c = getchar()) != '\n' && c != EOF);
 }
 
+//Función para validar la lectura correcta de IDS
 int leerID()
 {
     int id;
@@ -263,6 +272,7 @@ int leerID()
     }
 }
 
+//Función para registrar ID y nombre de un nuevo jugador, además inicializa sus estadisticas y crea su clave para el ranking
 void registrarJugador(SistemaTorneos* sistema)
 {
     Jugador* jugador = malloc(sizeof(Jugador));
@@ -301,6 +311,7 @@ void registrarJugador(SistemaTorneos* sistema)
     puts("\nJugador registrado.");
 }
 
+//Función para buscar un jugador por ID y mostrarlo junto a su información
 void buscarJugador(SistemaTorneos* sistema)
 {
     int id = leerID();
@@ -326,6 +337,7 @@ void buscarJugador(SistemaTorneos* sistema)
     printf("Puntaje: %d\n", jugador->puntaje);
 }
 
+//Función para mostrar los jugadores registrados en orden que fueron ingresados
 void mostrarJugadores(SistemaTorneos* sistema)
 {
     MapPair* pair =map_first(sistema->jugadores);
@@ -348,8 +360,9 @@ void mostrarJugadores(SistemaTorneos* sistema)
     }
 }
 
-void eliminarJugador(SistemaTorneos* sistema){
-
+//Función para eliminar un jugador y liberar su memoria
+void eliminarJugador(SistemaTorneos* sistema)
+{
     int id = leerID();
 
     MapPair* pair = map_search(sistema->jugadores, &id);
@@ -400,6 +413,7 @@ void eliminarJugador(SistemaTorneos* sistema){
     puts("\nJugador eliminado.");
 }
 
+//Menú para gestionar torneos
 void menuTorneos(SistemaTorneos* sistema)
 {
     int opcion;
@@ -438,6 +452,8 @@ void menuTorneos(SistemaTorneos* sistema)
     }while(opcion != 0);
 }
 
+/* Función que se puede usar en caso de querer terminar el torneo activo para crear otro,
+es necesario hacer el proceso de registrar e inscribir jugadores nuevamente */
 void finalizarTorneo(SistemaTorneos* sistema)
 {
     MapPair* pair = map_first(sistema->jugadores);
@@ -472,6 +488,7 @@ void finalizarTorneo(SistemaTorneos* sistema)
     puts("\nTorneo finalizado correctamente.");
 }
 
+//Función para crear un nuevo torneo
 void crearTorneo(SistemaTorneos* sistema)
 {
     if(sistema->torneoActivo){
@@ -503,6 +520,7 @@ void crearTorneo(SistemaTorneos* sistema)
     puts("\nTorneo creado correctamente.");
 }
 
+//Función para inscribir jugadores en el torneo
 void inscribirJugador(SistemaTorneos* sistema)
 {
     if(!sistema->torneoActivo){
@@ -540,6 +558,7 @@ void inscribirJugador(SistemaTorneos* sistema)
     puts("\nJugador inscrito.");
 }
 
+//Función para mostrar los participantes del torneo en orden de inscripción
 void mostrarParticipantes(SistemaTorneos* sistema)
 {
     if(!sistema->torneoActivo){
@@ -565,6 +584,7 @@ void mostrarParticipantes(SistemaTorneos* sistema)
     }
 }
 
+//Función para la generación de los enfrentamientos, formato: todos contra todos 
 void generarEnfrentamientos(SistemaTorneos* sistema)
 {
     if(!sistema->torneoActivo){
@@ -627,6 +647,7 @@ void generarEnfrentamientos(SistemaTorneos* sistema)
     puts("\nEnfrentamientos generados correctamente.");
 }
 
+//Menú para gestionar partidos
 void menuPartidos(SistemaTorneos* sistema)
 {
     int opcion;
@@ -665,6 +686,7 @@ void menuPartidos(SistemaTorneos* sistema)
     }while(opcion != 0);
 }
 
+//Función para ver el próximo partido a realizarse 
 void verProximoPartido(SistemaTorneos* sistema)
 {
 
@@ -681,6 +703,7 @@ void verProximoPartido(SistemaTorneos* sistema)
     printf("%s vs %s\n", partido->jugador1->nombre, partido->jugador2->nombre);
 }
 
+//Función para ir actualizando el ranking en base a los resultados registrados
 void actualizarRanking(SistemaTorneos* sistema, Jugador* jugador)
 {
     MapPair* eliminado = map_remove(sistema->ranking, jugador->rankingKey);
@@ -693,6 +716,7 @@ void actualizarRanking(SistemaTorneos* sistema, Jugador* jugador)
     map_insert(sistema->ranking, jugador->rankingKey, jugador);
 }
 
+//Función para registrar los resultados de cada partido
 void registrarResultado(SistemaTorneos* sistema)
 {
     Partido* partido = queue_front(sistema->partidosPendientes);
@@ -786,6 +810,7 @@ void registrarResultado(SistemaTorneos* sistema)
     puts("\nResultado registrado.");
 }
 
+//Función para mostrar los partidos aún por jugar
 void mostrarPartidosPendientes(SistemaTorneos* sistema)
 {
     Partido* partido = queue_front(sistema->partidosPendientes);
@@ -808,6 +833,7 @@ void mostrarPartidosPendientes(SistemaTorneos* sistema)
     }
 }
 
+//Función para mostrar historial de resultados registrados
 void mostrarHistorial(SistemaTorneos* sistema)
 {
     Resultado* resultado =list_first(sistema->historialCompleto);
@@ -830,10 +856,9 @@ void mostrarHistorial(SistemaTorneos* sistema)
     }
 }
 
-void menuEstadisticas(
-    SistemaTorneos* sistema
-){
-
+//Menú para gestionar estadísticas 
+void menuEstadisticas(SistemaTorneos* sistema)
+{
     int opcion;
 
     do{
@@ -867,6 +892,7 @@ void menuEstadisticas(
     }while(opcion != 0);
 }
 
+//Función para mostrar el ranking con todos los jugadores
 void mostrarRanking(SistemaTorneos* sistema)
 {
     MapPair* pair = map_first(sistema->ranking);
@@ -894,6 +920,7 @@ void mostrarRanking(SistemaTorneos* sistema)
     }
 }
 
+//Función para mostrar al top 3 mejores jugadores del torneo
 void top3Jugadores(SistemaTorneos* sistema)
 {
     MapPair* pair = map_first(sistema->ranking);
@@ -918,6 +945,7 @@ void top3Jugadores(SistemaTorneos* sistema)
     }
 }
 
+//Función para mostrar las estadísticas de un jugador
 void estadisticasJugador(SistemaTorneos* sistema)
 {
     int id = leerID();
@@ -943,6 +971,7 @@ void estadisticasJugador(SistemaTorneos* sistema)
     printf("Puntaje: %d\n", jugador->puntaje);
 }
 
+//Función para deshacer el último registro de un partido y volver a encolarlo como pendiente
 void deshacerUltimaAccion(SistemaTorneos* sistema)
 {
     if(!sistema->torneoActivo){
@@ -1000,7 +1029,7 @@ void deshacerUltimaAccion(SistemaTorneos* sistema)
     puts("\nAccion revertida correctamente.");
 }
 
-
+//Función que, al momento de salir del menú principal, libera toda la memoria utilizada en el funcionamiento del sistema
 void liberarSistema(SistemaTorneos* sistema)
 {
     /* Liberar partidos pendientes */
@@ -1073,6 +1102,7 @@ void liberarSistema(SistemaTorneos* sistema)
     free(sistema);
 }
 
+//Main pricipal del programa
 int main(){
 
     SistemaTorneos* sistema = crearSistema();
